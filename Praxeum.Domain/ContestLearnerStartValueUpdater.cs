@@ -26,16 +26,17 @@ namespace Praxeum.Domain
                     if (contestLearner.StartValue == null || forceUpdate)
                     {
                         contestLearner.StartValue =
-                            microsoftProfile.ProgressStatus.CurrentLevel;
+                            microsoftProfile.GameStatus.Level.LevelNumber;
                     }
                     break;
                 case ContestType.AccumulatedPoints:
+                case ContestType.Leaderboard:
                     if (contestLearner.StartValue == null || forceUpdate)
                     {
                         contestLearner.StartValue =
                             _experiencePointsCalculator.Calculate(
-                                microsoftProfile.ProgressStatus.CurrentLevel, 
-                                microsoftProfile.ProgressStatus.CurrentLevelPointsEarned);
+                                microsoftProfile.GameStatus.Level.LevelNumber,
+                                microsoftProfile.GameStatus.CurrentLevelPointsEarned);
                     }
                     break;
                 case ContestType.Levels:

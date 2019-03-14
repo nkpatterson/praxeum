@@ -22,17 +22,25 @@ namespace Praxeum.Domain
             switch (contest.Type)
             {
                 case ContestType.AccumulatedLevels:
+                    contestLearner.CurrentValue = 
+                        microsoftProfile.GameStatus.Level.LevelNumber - contestLearner.StartValue;
+                    break;
                 case ContestType.Levels:
                     contestLearner.CurrentValue =
-                        microsoftProfile.ProgressStatus.CurrentLevel;
+                        microsoftProfile.GameStatus.Level.LevelNumber;
                     break;
                 case ContestType.AccumulatedPoints:
                 case ContestType.Leaderboard:
+                    contestLearner.CurrentValue =
+                        _experiencePointsCalculator.Calculate(
+                            microsoftProfile.GameStatus.Level.LevelNumber,
+                            microsoftProfile.GameStatus.CurrentLevelPointsEarned) - contestLearner.StartValue;
+                    break;
                 case ContestType.Points:
                     contestLearner.CurrentValue =
                         _experiencePointsCalculator.Calculate(
-                            microsoftProfile.ProgressStatus.CurrentLevel,
-                            microsoftProfile.ProgressStatus.CurrentLevelPointsEarned);
+                            microsoftProfile.GameStatus.Level.LevelNumber,
+                            microsoftProfile.GameStatus.CurrentLevelPointsEarned);
                     break;
             }
 
