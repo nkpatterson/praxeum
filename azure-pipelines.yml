@@ -13,9 +13,13 @@ variables:
   buildConfiguration: 'Release'
 
 steps:
-- script: dotnet publish -c $(buildConfiguration) -o $(build.stagingdirectory)
-  displayName: 'dotnet publish $(buildConfiguration)'
+- script: dotnet publish -c $(buildConfiguration) -o "$(build.stagingdirectory)/web"
+  displayName: 'dotnet publish WebApp'
   workingDirectory: $(Build.SourcesDirectory)/Praxeum.WebApp
+
+- script: dotnet publish -c $(buildConfiguration) -o "$(build.stagingdirectory)/func"
+  displayName: 'dotnet publish FunctionApp'
+  workingDirectory: $(Build.SourcesDirectory)/Praxeum.FunctionApp
 
 - task: PublishBuildArtifacts@1
   displayName: 'Publish build output'
