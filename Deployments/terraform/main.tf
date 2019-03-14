@@ -24,11 +24,15 @@ resource "azurerm_app_service" "web" {
 
 	app_settings = {
 		"AzureCosmosDbOptions:ConnectionString" = "AccountEndpoint=${azurerm_cosmosdb_account.cosmos.endpoint};AccountKey=${azurerm_cosmosdb_account.cosmos.primary_master_key};"
-		"AzureCosmosDbOptions:DatabaseId" = "records"
+		"AzureCosmosDbOptions:DatabaseId" = "cloudskills"
 		"AzureQueueStorageEventPublisherOptions:ConnectionString" = "${azurerm_storage_account.storage.primary_connection_string}"
 		"AzureQueueStorageEventPublisherOptions:QueuePrefix" = ""
 		"AzureTableStorageOptions:ConnectionString" = "${azurerm_storage_account.storage.primary_connection_string}"
 		"ApplicationInsights:InstrumentationKey" = "${azurerm_application_insights.ai.instrumentation_key}"
+		"AzureADB2COptions:Authority" = "https://cloudskillsuhaul.b2clogin.com/cloudskillsuhaul.onmicrosoft.com/B2C_1_SignUpSignIn/v2.0"
+		"AzureADB2COptions:ClientId" = "fd83d2b6-f2e9-4a30-a661-ae3e59f90af5"
+		"AzureADB2COptions:ClientSecret" = ""
+		"AzureADB2COptions:MetadataAddress" = "https://cloudskillsuhaul.b2clogin.com/cloudskillsuhaul.onmicrosoft.com/v2.0/.well-known/openid-configuration?p=B2C_1_SignUpSignIn"
 	}
 }
 
@@ -38,6 +42,16 @@ resource "azurerm_function_app" "func" {
 	resource_group_name = "${azurerm_resource_group.rg.name}"
 	app_service_plan_id = "${azurerm_app_service_plan.asp.id}"
 	storage_connection_string = "${azurerm_storage_account.storage.primary_connection_string}"
+
+	app_settings = {
+		"AzureCosmosDbOptions:ConnectionString" = "AccountEndpoint=${azurerm_cosmosdb_account.cosmos.endpoint};AccountKey=${azurerm_cosmosdb_account.cosmos.primary_master_key};"
+		"AzureCosmosDbOptions:DatabaseId" = "cloudskills"
+		"AzureQueueStorageEventPublisherOptions:ConnectionString" = "${azurerm_storage_account.storage.primary_connection_string}"
+		"AzureQueueStorageEventPublisherOptions:QueuePrefix" = ""
+		"AzureStorageOptions:ConnectionString" = "${azurerm_storage_account.storage.primary_connection_string}"
+		"ApplicationInsights:InstrumentationKey" = "${azurerm_application_insights.ai.instrumentation_key}"
+		"APPLICATION_INSIGHTS" = "${azurerm_application_insights.ai.instrumentation_key}"
+	}
 }
 
 resource "azurerm_storage_account" "storage" {
@@ -65,7 +79,7 @@ resource "azurerm_cosmosdb_account" "cosmos" {
 	}
 
 	geo_location {
-		location = "eastus2"
+		location = "${azurerm_resource_group.rg.location}"
 		failover_priority = "0"
 	}
 }
@@ -75,7 +89,4 @@ resource "azurerm_application_insights" "ai" {
 	resource_group_name = "${azurerm_resource_group.rg.name}"
 	location = "${azurerm_resource_group.rg.location}"
 	application_type = "other"
-
 }
-
-
