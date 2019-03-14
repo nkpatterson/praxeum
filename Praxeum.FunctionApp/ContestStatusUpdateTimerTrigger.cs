@@ -16,7 +16,7 @@ namespace Praxeum.FunctionApp
 
         [FunctionName("ContestStatusUpdateTimerTrigger")]
         public static async Task Run(
-             [TimerTrigger("0 5 * * * *", RunOnStartup = true, UseMonitor = false)] TimerInfo myTimer,
+             [TimerTrigger("0 */5 * * * *", RunOnStartup = true, UseMonitor = false)] TimerInfo myTimer,
              [Queue("conteststatus-update", Connection = "AzureStorageOptions:ConnectionString")] ICollector<ContestStatusUpdate> contestStatusUpdates,
              ILogger log)
         {
