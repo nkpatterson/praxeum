@@ -6,3 +6,7 @@ body {
 h1 {
     margin-bottom: 2rem;
 }
+
+footer p {
+    font-size: 10pt;
+}
