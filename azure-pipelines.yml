@@ -21,6 +21,16 @@ steps:
   displayName: 'dotnet publish FunctionApp'
   workingDirectory: $(Build.SourcesDirectory)/Praxeum.FunctionApp
 
+- script: 'dotnet test -c $(buildConfiguration) --logger trx'
+  displayName: 'Run FunctionApp Tests'
+  workingDirectory: $(Build.SourcesDirectory)/Praxeum.FunctionApp.Tests
+
+- task: PublishTestResults@2
+  displayName: 'Publish FunctionApp Test Results'
+  inputs:
+    testResultsFormat: VSTest
+    testResultsFiles: '**/*.trx'
+
 - task: PublishBuildArtifacts@1
   displayName: 'Publish build output'
   inputs:
