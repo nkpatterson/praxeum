@@ -28,6 +28,10 @@ footer {
     margin-top: 2rem;
 }
 
+    footer p {
+        font-size: 10pt;
+    }
+
 .navbar {
     border-bottom: 1px solid #E3E3E3;
 }
