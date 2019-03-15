@@ -1,4 +1,4 @@
-variable "customer_name" {}
+variable "instance_name" {}
 variable "location" {
 	default = "westus2"
 }

@@ -1,12 +1,12 @@
 provider "azurerm" {}
 
 resource "azurerm_resource_group" "rg" {
-	name		= "cloudskills-${var.customer_name}-rg"
+	name		= "cloudskills-${var.instance_name}-rg"
 	location	= "${var.location}"
 }
 
 resource "azurerm_app_service_plan" "asp" {
-	name		= "cloudskills-${var.customer_name}-asp"
+	name		= "cloudskills-${var.instance_name}-asp"
 	location	= "${azurerm_resource_group.rg.location}"
 	resource_group_name = "${azurerm_resource_group.rg.name}"
 
@@ -17,7 +17,7 @@ resource "azurerm_app_service_plan" "asp" {
 }
 
 resource "azurerm_app_service" "web" {
-	name		= "cloudskills-${var.customer_name}"
+	name		= "cloudskills-${var.instance_name}"
 	location	= "${azurerm_resource_group.rg.location}"
 	resource_group_name = "${azurerm_resource_group.rg.name}"
 	app_service_plan_id = "${azurerm_app_service_plan.asp.id}"
@@ -37,7 +37,7 @@ resource "azurerm_app_service" "web" {
 }
 
 resource "azurerm_function_app" "func" {
-	name = "cloudskills-${var.customer_name}-func"
+	name = "cloudskills-${var.instance_name}-func"
 	location = "${azurerm_resource_group.rg.location}"
 	resource_group_name = "${azurerm_resource_group.rg.name}"
 	app_service_plan_id = "${azurerm_app_service_plan.asp.id}"
@@ -51,11 +51,19 @@ resource "azurerm_function_app" "func" {
 		"AzureStorageOptions:ConnectionString" = "${azurerm_storage_account.storage.primary_connection_string}"
 		"ApplicationInsights:InstrumentationKey" = "${azurerm_application_insights.ai.instrumentation_key}"
 		"APPLICATION_INSIGHTS" = "${azurerm_application_insights.ai.instrumentation_key}"
+		"APPINSIGHTS_PROFILERFEATURE_VERSION" = "1.0.0"
+		"APPINSIGHTS_SNAPSHOTFEATURE_VERSION" = "1.0.0"
+		"ApplicationInsightsAgent_EXTENSION_VERSION" = "~2"
+		"DiagnosticServices_EXTENSION_VERSION" = "~3"
+		"InstrumentationEngine_EXTENSION_VERSION" = "~1"
+		"SnapshotDebugger_EXTENSION_VERSION" = "~1"
+		"XDT_MicrosoftApplicationInsights_BaseExtensions" = "~1"
+		"XDT_MicrosoftApplicationInsights_Mode" = "recommended"
 	}
 }
 
 resource "azurerm_storage_account" "storage" {
-	name		= "cloudskills${var.customer_name}"
+	name		= "cloudskills${var.instance_name}"
 	location	= "${azurerm_resource_group.rg.location}"
 	resource_group_name = "${azurerm_resource_group.rg.name}"
 	account_tier	= "Standard"
@@ -69,7 +77,7 @@ resource "azurerm_storage_table" "table" {
 }
 
 resource "azurerm_cosmosdb_account" "cosmos" {
-	name = "cloudskills-${var.customer_name}-cosmosdb"
+	name = "cloudskills-${var.instance_name}-cosmosdb"
 	resource_group_name = "${azurerm_resource_group.rg.name}"
 	location = "${azurerm_resource_group.rg.location}"
 	offer_type = "Standard"
@@ -85,7 +93,7 @@ resource "azurerm_cosmosdb_account" "cosmos" {
 }
 
 resource "azurerm_application_insights" "ai" {
-	name = "cloudskills-${var.customer_name}-ai"
+	name = "cloudskills-${var.instance_name}-ai"
 	resource_group_name = "${azurerm_resource_group.rg.name}"
 	location = "${azurerm_resource_group.rg.location}"
 	application_type = "other"
