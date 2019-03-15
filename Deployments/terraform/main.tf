@@ -59,6 +59,7 @@ resource "azurerm_function_app" "func" {
 		"SnapshotDebugger_EXTENSION_VERSION" = "~1"
 		"XDT_MicrosoftApplicationInsights_BaseExtensions" = "~1"
 		"XDT_MicrosoftApplicationInsights_Mode" = "recommended"
+		"FUNCTIONS_EXTENSION_VERSION" = "~2"
 	}
 }
 
