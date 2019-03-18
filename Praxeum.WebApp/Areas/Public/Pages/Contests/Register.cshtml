@@ -55,5 +55,5 @@
     </div>
     <input asp-for="Learner.ContestId" type="hidden" />
     <button type="submit" class="btn btn-primary"><i class="fas fa-plus"></i><span>Add</span></button>
-    <a class="btn btn-link" asp-page="Index">Cancel</a>
+    <a class="btn btn-link" asp-page="Details" asp-route-id="@Model.Contest.Id">Cancel</a>
 </form>
