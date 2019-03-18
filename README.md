@@ -1,3 +1,5 @@
+[![Build Status](https://dev.azure.com/nkpatterson/Cloud%20Skills%20Challenge/_apis/build/status/nkpatterson.praxeum?branchName=master)](https://dev.azure.com/nkpatterson/Cloud%20Skills%20Challenge/_build/latest?definitionId=97&branchName=master)
+
 # Cloud Skills Challenges #
 This application was designed to help internal Microsoft employees to core enable customer developers through gamification using the Microsoft Learn portal.
 
