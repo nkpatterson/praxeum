@@ -65,10 +65,29 @@ namespace Praxeum.WebApp.Areas.Public.Pages.Contests
                 return Page();
             }
 
-            await _contestLearnerAdder.ExecuteAsync(
-                this.Learner);
+            try
+            {
+                await _contestLearnerAdder.ExecuteAsync(
+                    this.Learner);
 
-            return RedirectToPage("Details", new { id });
+                return RedirectToPage("Details", new { id });
+            }
+            catch (Exception)
+            {
+                ModelState.AddModelError("ProfileLoadError", 
+                    $"Couldn't load Profile {this.Learner.UserName}. Make sure you are using just the Profile Name and not email address.");
+
+                await this.GetContestAsync(
+                    id.Value);
+
+                this.Learner =
+                    new ContestLearnerAdd
+                    {
+                        ContestId = id.Value
+                    };
+
+                return Page();
+            }
         }
 
         private async Task GetContestAsync(
