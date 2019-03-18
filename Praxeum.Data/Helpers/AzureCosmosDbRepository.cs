@@ -6,7 +6,7 @@ namespace Praxeum.Data.Helpers
     public abstract class AzureCosmosDbRepository 
     {
         protected readonly IOptions<AzureCosmosDbOptions> _azureCosmosDbOptions;
-        private readonly CosmosClient _cosmosClient;
+        private static CosmosClient _cosmosClient;
         protected readonly CosmosDatabase _cosmosDatabase;
 
         public AzureCosmosDbRepository(
@@ -15,9 +15,13 @@ namespace Praxeum.Data.Helpers
             _azureCosmosDbOptions =
                 azureCosmosDbOptions;
 
-            _cosmosClient =
-                new CosmosClient(
-                    _azureCosmosDbOptions.Value.ConnectionString);
+            if (_cosmosClient == null)
+            {
+                _cosmosClient =
+                    new CosmosClient(
+                        _azureCosmosDbOptions.Value.ConnectionString);
+            }
+            
             _cosmosDatabase = _cosmosClient.Databases[_azureCosmosDbOptions.Value.DatabaseId];
         }
     }

@@ -50,6 +50,10 @@ resource "azurerm_app_service" "web" {
 		"XDT_MicrosoftApplicationInsights_Mode" = "recommended"
 		"WEBSITE_RUN_FROM_PACKAGE" = "1"
 	}
+
+	site_config {
+		always_on = "true"
+	}
 }
 
 resource "azurerm_app_service_slot" "beta" {
@@ -81,6 +85,10 @@ resource "azurerm_app_service_slot" "beta" {
 		"XDT_MicrosoftApplicationInsights_BaseExtensions" = "~1"
 		"XDT_MicrosoftApplicationInsights_Mode" = "recommended"
 		"WEBSITE_RUN_FROM_PACKAGE" = "1"
+	}
+
+	site_config {
+		always_on = "true"
 	}
 }
 
