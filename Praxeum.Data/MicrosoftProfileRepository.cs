@@ -6,37 +6,35 @@ namespace Praxeum.Data
 {
     public class MicrosoftProfileRepository : IMicrosoftProfileRepository
     {
+        private static HttpClient _httpClient = new HttpClient();
+
         public async Task<MicrosoftProfile> FetchProfileAsync(
              string userName)
         {
             MicrosoftProfile result;
+            HttpResponseMessage response;
 
-            using (var httpClient = new HttpClient())
-            {
-                HttpResponseMessage response;
+            response =
+                await _httpClient.GetAsync($"https://docs.microsoft.com/api/profiles/{userName}");
+            response.EnsureSuccessStatusCode();
 
-                response =
-                    await httpClient.GetAsync($"https://docs.microsoft.com/api/profiles/{userName}");
-                response.EnsureSuccessStatusCode();
+            string content;
 
-                string content;
+            content =
+                await response.Content.ReadAsStringAsync();
 
-                content =
-                    await response.Content.ReadAsStringAsync();
+            result =
+                JsonConvert.DeserializeObject<MicrosoftProfile>(content);
 
-                result =
-                    JsonConvert.DeserializeObject<MicrosoftProfile>(content);
+            response =
+                await _httpClient.GetAsync($"https://docs.microsoft.com/api/gamestatus/{result.Id}");
+            response.EnsureSuccessStatusCode();
 
-                response =
-                    await httpClient.GetAsync($"https://docs.microsoft.com/api/gamestatus/{result.Id}");
-                response.EnsureSuccessStatusCode();
+            content =
+                await response.Content.ReadAsStringAsync();
 
-                content =
-                    await response.Content.ReadAsStringAsync();
-
-                result.GameStatus =
-                    JsonConvert.DeserializeObject<MicrosoftProfileGameStatus>(content);
-            }
+            result.GameStatus =
+                JsonConvert.DeserializeObject<MicrosoftProfileGameStatus>(content);
 
             return result;
         }

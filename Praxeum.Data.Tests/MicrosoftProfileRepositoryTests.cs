@@ -34,7 +34,7 @@ namespace MeijerDataCollectMVP.FuncAppTests
                 new MicrosoftProfileRepository();
 
             var microsoftProfile =
-                await microsoftProfileRepository.FetchProfileAsync("bpd");
+                await microsoftProfileRepository.FetchProfileAsync("nipatter");
 
             microsoftProfile.Should().NotBeNull();
             microsoftProfile.UserName.Should().NotBeNull();
