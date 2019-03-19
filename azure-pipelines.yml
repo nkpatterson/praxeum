@@ -22,7 +22,7 @@ steps:
   workingDirectory: $(Build.SourcesDirectory)/Praxeum.FunctionApp
 
 - script: 'dotnet test -c $(buildConfiguration) --logger trx'
-  displayName: 'Run Data Tests Tests'
+  displayName: 'Run Data Tests'
   workingDirectory: $(Build.SourcesDirectory)/Praxeum.Data.Tests
 
 - task: PublishTestResults@2
