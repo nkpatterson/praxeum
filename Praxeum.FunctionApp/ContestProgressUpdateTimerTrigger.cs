@@ -16,7 +16,7 @@ namespace Praxeum.FunctionApp
 
         [FunctionName("ContestProgressUpdateTimerTrigger")]
         public static async Task Run(
-            [TimerTrigger("0 0 */6 * * *", RunOnStartup = true, UseMonitor = false)] TimerInfo myTimer,
+            [TimerTrigger("0 * * * * *", RunOnStartup = true, UseMonitor = false)] TimerInfo myTimer,
             [Queue("contestprogress-update", Connection = "AzureStorageOptions:ConnectionString")] ICollector<ContestProgressUpdate> contestProgressUpdates,
             ILogger log)
         {
@@ -35,7 +35,7 @@ namespace Praxeum.FunctionApp
                     });
 
             foreach (var contest in contests
-                .Where(x => x.NextProgressUpdateOn >= DateTime.UtcNow))
+                .Where(x => x.NextProgressUpdateOn <= DateTime.UtcNow))
             {
                 contestProgressUpdates.Add(
                     new ContestProgressUpdate
