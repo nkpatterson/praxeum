@@ -10,15 +10,14 @@ using Praxeum.FunctionApp.Helpers;
 
 namespace Praxeum.FunctionApp
 {
-    public static class ContestProgressUpdateTimerTrigger
+    public static class ContestEndTimerTrigger
     {
         // https://codehollow.com/2017/02/azure-functions-time-trigger-cron-cheat-sheet/
         // https://github.com/Azure/azure-webjobs-sdk-extensions/wiki/TimerTrigger
 
-        [FunctionName("ContestProgressUpdateTimerTrigger")]
+        [FunctionName("ContestEndTimerTrigger")]
         public static async Task Run(
-            [TimerTrigger("0 * * * * *")] TimerInfo myTimer,
-            [Queue("contestprogress-update", Connection = "AzureStorageOptions:ConnectionString")] ICollector<ContestProgressUpdate> contestProgressUpdates,
+            [TimerTrigger("0 0 */1 * * *")] TimerInfo myTimer,
             ILogger log)
         {
             log.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
@@ -36,14 +35,19 @@ namespace Praxeum.FunctionApp
                     });
 
             foreach (var contest in contests
-                .Where(x => x.NextProgressUpdateOn <= DateTime.UtcNow))
+                .Where(x => x.EndDate <= DateTime.UtcNow))
             {
-                contestProgressUpdates.Add(
-                    new ContestProgressUpdate
-                    {
-                        Id = contest.Id
-                    });
+                var contestEnder =
+                    new ContestEnder(
+                        ObjectFactory.CreateMapper(),
+                        ObjectFactory.CreateContestRepository());
 
+                await contestEnder.ExecuteAsync(
+                     new ContestEnd
+                     {
+                         Id = contest.Id
+                     });
+                
                 log.LogInformation(JsonConvert.SerializeObject(contest, Formatting.Indented));
             }
         }

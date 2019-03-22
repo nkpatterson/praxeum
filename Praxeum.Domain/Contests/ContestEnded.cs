@@ -2,7 +2,7 @@
 
 namespace Praxeum.Domain.Contests
 {
-    public class ContestStatusUpdated : ContestUpdated
+    public class ContestEnded : Contest
     {
     }
 }

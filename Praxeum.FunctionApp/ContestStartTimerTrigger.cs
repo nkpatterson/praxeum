@@ -10,15 +10,14 @@ using Praxeum.FunctionApp.Helpers;
 
 namespace Praxeum.FunctionApp
 {
-    public static class ContestProgressUpdateTimerTrigger
+    public static class ContestStartTimerTrigger
     {
         // https://codehollow.com/2017/02/azure-functions-time-trigger-cron-cheat-sheet/
         // https://github.com/Azure/azure-webjobs-sdk-extensions/wiki/TimerTrigger
 
-        [FunctionName("ContestProgressUpdateTimerTrigger")]
+        [FunctionName("ContestStartTimerTrigger")]
         public static async Task Run(
-            [TimerTrigger("0 * * * * *")] TimerInfo myTimer,
-            [Queue("contestprogress-update", Connection = "AzureStorageOptions:ConnectionString")] ICollector<ContestProgressUpdate> contestProgressUpdates,
+            [TimerTrigger("0 0 */1 * * *")] TimerInfo myTimer,
             ILogger log)
         {
             log.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
@@ -32,18 +31,24 @@ namespace Praxeum.FunctionApp
                 await contestLister.ExecuteAsync(
                     new ContestList
                     {
-                        Status = ContestStatus.InProgress
+                        Status = ContestStatus.Ready
                     });
 
             foreach (var contest in contests
-                .Where(x => x.NextProgressUpdateOn <= DateTime.UtcNow))
+                .Where(x => x.StartDate <= DateTime.UtcNow))
             {
-                contestProgressUpdates.Add(
-                    new ContestProgressUpdate
-                    {
-                        Id = contest.Id
-                    });
+                var contestStarter =
+                    new ContestStarter(
+                        ObjectFactory.CreateMapper(),
+                        ObjectFactory.CreateAzureQueueStorageEventPublisher(),
+                        ObjectFactory.CreateContestRepository());
 
+                await contestStarter.ExecuteAsync(
+                     new ContestStart
+                     {
+                         Id = contest.Id
+                     });
+                
                 log.LogInformation(JsonConvert.SerializeObject(contest, Formatting.Indented));
             }
         }

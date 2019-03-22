@@ -1,11 +1,10 @@
 ﻿using System;
-using System.ComponentModel.DataAnnotations;
 
 namespace Praxeum.Domain.Contests
 {
-    public class ContestStatusUpdate
+    public class ContestEnd
     {
-        [Required]
+        [SwaggerExclude]
         public Guid Id { get; set; }
     }
 }

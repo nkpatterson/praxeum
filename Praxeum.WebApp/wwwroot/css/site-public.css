@@ -1,12 +1,10 @@
-body {
-    margin-top: 2rem;
-    margin-bottom: 2rem;
-}
-
 h1 {
     margin-bottom: 2rem;
 }
 
 footer p {
     font-size: 10pt;
+}
+.form-check .text-danger {
+    margin-left: -1.25rem;
 }
