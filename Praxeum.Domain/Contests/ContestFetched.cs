@@ -21,11 +21,17 @@ namespace Praxeum.Domain.Contests
             {
                 if (this.IsPointsContest())
                 {
-                    result += learner.PointsGrowthValue.Value;
+                    if (learner.PointsGrowthValue != null)
+                    {
+                        result += learner.PointsGrowthValue.Value;
+                    }
                 }
                 else
                 {
-                    result += learner.LevelGrowthValue.Value;
+                    if (learner.LevelGrowthValue != null)
+                    {
+                        result += learner.LevelGrowthValue.Value;
+                    }
                 }
             }
 
